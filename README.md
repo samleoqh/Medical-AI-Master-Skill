@@ -1,122 +1,114 @@
 # Medical AI Master Skill
 
-面向医学影像 AI 项目的通用 skill，覆盖实验设计、数据泄漏防护、患者级切分、模型与损失函数选择、训练监控、评估规范、推理部署与结果可复现性。
+**A universal engineering and research standard for medical imaging AI projects.**
+**面向医学影像 AI 项目的通用工程与研究规范。**
 
-本仓库适合以下场景：
+This repository covers experimental design, data leakage prevention, patient-level splitting, model and loss function selection, training monitoring, evaluation standards, inference deployment, and result reproducibility.
+本仓库覆盖实验设计、数据泄漏防护、患者级切分、模型与损失函数选择、训练监控、评估规范、推理部署与结果可复现性。
 
-- 医学图像分割、分类、检测、生成、去噪、配准、多任务学习
-- `MONAI`、`nnU-Net`、`PyTorch Lightning`、`PyTorch`、`SimpleITK` 相关项目
-- 从零搭建医学影像 AI 代码库
-- 对已有研究代码做规范化升级
-- 统一训练日志、实验命名、测试集边界和评估标准
+---
 
-## 仓库内容
+## Repository Contents / 仓库内容
 
 ```text
-medical-ai-master-skill/
-├── SKILL.md
+Medical-AI-Master-Skill/
+├── SKILL.md                            # Main skill definition (主 skill 定义)
 ├── references/
-│   ├── architecture_and_loss.md
-│   ├── tensorboard_logging.md
-│   └── inference_and_deployment.md
+│   ├── architecture_and_loss.md        # Architecture & loss selection (架构与损失函数)
+│   ├── tensorboard_logging.md          # Logging & monitoring standards (日志与监控规范)
+│   └── inference_and_deployment.md     # Evaluation, post-processing, deployment (评估与部署)
 ├── README.md
-├── CONTRIBUTING.md
 ├── LICENSE
 └── .gitignore
 ```
 
-文件说明：
+---
 
-- `SKILL.md`：主 skill 定义，包含触发范围、工作原则、任务模式、最小示例和输出风格
-- `references/architecture_and_loss.md`：模型架构与损失函数选择参考
-- `references/tensorboard_logging.md`：训练日志、指标和 TensorBoard 组织规范
-- `references/inference_and_deployment.md`：评估、推理、部署前规范
+## Design Goals / 设计目标
 
-## 设计目标
+This skill is not a fixed framework recipe. It distills a transferable set of medical imaging AI engineering standards with a clear priority order:
+本 skill 不是某个框架的唯一写法，而是沉淀一套可迁移的医学影像 AI 工程规范，遵循明确的优先级顺序：
 
-这个 skill 的目标不是给出某个固定框架的唯一写法，而是沉淀一套可迁移的医学影像 AI 工程规范。它强调几件事：
+1. **Data Correctness > Model Complexity** — Ensure data is correct before discussing model complexity. (先确保数据正确，再讨论模型复杂度)
+2. **Reproducibility > Metrics** — Ensure split integrity before reporting performance numbers. (先确保切分无泄漏，再讨论性能数字)
+3. **Robust Baselines > Complex Tricks** — Establish a solid baseline before introducing advanced techniques. (先建立稳健基线，再引入复杂技巧)
+4. **Auditable Results > Demos** — Ensure results are reproducible and auditable before publishing. (先保证结果可复现可审计，再做论文或演示输出)
 
-1. 先确保数据正确，再讨论模型复杂度
-2. 先确保切分无泄漏，再讨论性能数字
-3. 先建立稳健基线，再引入复杂技巧
-4. 先保证结果可复现、可审计，再做论文或演示输出
+---
 
-## 适用范围
+## Applicable Scenarios / 适用范围
 
-这个 skill 优先用于：
+This skill is best used for:
+本 skill 优先用于：
 
-- 需要设计或审查数据切分、训练流程、评估流程的请求
-- 涉及测试集边界、患者级切分、日志规范、统计检验的请求
-- 需要统一医学影像 AI 工程规范的代码与方案问题
+- Medical image segmentation, classification, detection, generation, denoising, registration, and multi-task learning. (医学图像分割、分类、检测、生成、去噪、配准、多任务学习)
+- Projects using `MONAI`, `nnU-Net`, `PyTorch Lightning`, `PyTorch`, or `SimpleITK`. (MONAI、nnU-Net、PyTorch Lightning 相关项目)
+- Building medical imaging AI codebases from scratch. (从零搭建医学影像 AI 代码库)
+- Standardizing existing research code. (对已有研究代码做规范化升级)
+- Unifying training logs, experiment naming, test set boundaries, and evaluation standards. (统一训练日志、实验命名、测试集边界和评估标准)
 
-以下情况可以简化使用：
+**Simplify usage for / 以下情况可以简化使用:**
+- Pure terminology explanation. (纯术语解释)
+- Minor syntax fixes unrelated to engineering decisions. (不涉及工程决策的极小型语法修补)
 
-- 纯术语解释
-- 不涉及工程决策的极小型语法修补
-- 与医学影像 AI 无关的通用编程问题
+---
 
-## 使用方式
+## Usage / 使用方式
 
-### 方式一：直接复制
+### Option 1: Direct Copy (直接复制)
+Copy `SKILL.md` and the `references/` directory into your skill directory.
 
-将本仓库中的 `SKILL.md` 与 `references/` 目录复制到你的 skill 目录中即可使用。
+### Option 2: Fork as Template (作为模板仓库)
+Fork this repository and customize:
+- Trigger keywords (触发词)
+- Framework preferences (框架偏好)
+- Minimal examples (最小示例)
+- Referenced documents (引用的参考文档)
 
-### 方式二：作为模板仓库
+---
 
-直接 fork 本仓库，再按你的项目风格修改：
+## Key Scenarios / 推荐使用场景
 
-- 触发词
-- 项目关键词
-- 框架偏好
-- 最小示例
-- 引用的参考文档
+### Greenfield (从零搭建)
+When you have data and task goals but no mature training code, use this skill to constrain project structure, data splits, experiment naming, monitoring, and evaluation.
 
-## 推荐使用场景
+### Brownfield Upgrade (升级现有项目)
+When an existing repository has unclear data splits, insufficient logs, misused test sets, or scattered configurations, this skill provides structured remediation.
 
-### 从零搭建
+### Targeted Support (局部专项支持)
+Use individual reference documents for specific sub-problems:
+- Architecture & loss selection → `references/architecture_and_loss.md`
+- TensorBoard design → `references/tensorboard_logging.md`
+- Inference & post-processing → `references/inference_and_deployment.md`
 
-当你只有数据、任务描述和若干目标指标，但没有成熟训练代码时，可以直接用本 skill 约束项目结构、数据切分、实验命名、监控和评估流程。
+---
 
-### 升级现有项目
+## Open Source Release Checklist / 开源发布建议
 
-当现有仓库存在这些问题时，本 skill 尤其适合：
+Before publishing a public version based on this skill:
+1. Remove any internal paths, hospital names, patient information, or non-public project identifiers. (删除内部路径、医院名称、患者信息)
+2. Confirm that example data and split examples contain no real identity information. (确认示例不含真实身份信息)
+3. Clearly state applicable and non-applicable boundaries in `README.md`. (明确适用边界与非适用边界)
+4. If significantly modified, add a version difference note on the repository homepage. (若修改较多，补充版本差异说明)
 
-- 数据切分不清楚
-- 训练日志不足
-- 指标命名混乱
-- 测试集被误用
-- 配置散落在脚本中
-- 结果无法复现
+---
 
-### 局部专项支持
+## Disclaimer / 注意事项
 
-如果你只需要处理某个子问题，也可以只使用对应参考文档，例如：
-
-- 架构与损失函数选择
-- TensorBoard 设计
-- 推理和后处理规范
-
-## 开源发布建议
-
-如果你准备基于这个 skill 发布自己的公开版本，建议先检查以下内容：
-
-1. 删除任何内部路径、医院名称、病人信息或不可公开的项目标识
-2. 确认示例数据、切分示例和命名示例不包含真实身份信息
-3. 在 `README.md` 中明确写出适用边界与非适用边界
-4. 若修改较多，建议在仓库首页补充你的版本差异说明
-
-## 注意事项
-
+This repository provides research and engineering standard recommendations. It does not constitute medical advice, clinical certification, regulatory approval, or medical device compliance conclusions.
 本仓库提供的是研究与工程规范建议，不构成医疗建议，也不代表任何临床认证、注册审批或医疗器械合规结论。
 
+If your system will enter a real clinical environment, you must separately complete:
 如果你的系统将进入真实临床环境，仍需单独完成：
+- Data compliance review (数据合规审查)
+- Privacy and security assessment (隐私与安全评估)
+- Model calibration and risk assessment (模型校准与风险评估)
+- Deployment environment validation (部署环境验证)
+- Clinical trial or formal approval process (临床试用或正式审批流程)
 
-- 数据合规审查
-- 隐私与安全评估
-- 模型校准与风险评估
-- 部署环境验证
-- 临床试用或正式审批流程
+---
 
-## 许可证
+## License / 许可证
 
+This repository uses the `MIT License`. You are free to use, modify, and distribute it, but please retain the original license text.
 本仓库使用 `MIT License`。你可以自由使用、修改和分发，但请保留原始许可证文本。

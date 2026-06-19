@@ -1,132 +1,101 @@
 ---
 name: medical-ai-master
-description: "医学影像 AI 项目的主力 skill。只要请求涉及医学影像任务设计、数据管线、训练实现、实验规范、模型评估、推理部署或测试集边界，默认优先读取本 skill。高相关触发词包括：分割、分类、检测、回归、生成、去噪、超分、配准、多模态融合、弱监督、半监督、自监督、多任务学习；脑 MRI/CT、ICH、病灶分割、3D 医学图像、各向异性体积数据、病理切片、X 光、超声、PET/CT、多序列 MRI；MONAI、nnU-Net、PyTorch Lightning、SimpleITK、医学 AI 数据管线；注意力机制、MIL pooling、扩散模型、flow matching、条件生成、对比学习、知识蒸馏、不确定性估计、TTA、纵向建模、预训练微调。若只是纯术语解释或不涉及工程决策的极小型代码修补，可按需简化使用。"
+description: "Core skill for medical imaging AI projects. Priority trigger for medical image task design, data pipelines, training implementation, experimental standards, model evaluation, inference deployment, or test set boundaries. High relevance keywords: segmentation, classification, detection, registration, multimodal, MONAI, nnU-Net, PyTorch Lightning. 医学影像 AI 项目的主力 skill。涉及医学影像任务设计、数据管线、训练实现、实验规范、模型评估、推理部署或测试集边界时优先触发。高相关词：分割、分类、检测、配准、多模态、MONAI、nnU-Net。"
 ---
 
-# Medical AI Master
+# Medical AI Master (医学影像 AI 专家)
 
-医学影像 AI 项目的通用工作规范。重点是在临床风险、科研严谨性、工程可维护性之间取得平衡，输出可复现、可解释、可扩展、可交付的结果。
+**Summary Box / 摘要**
+This skill establishes the universal engineering and research standards for medical imaging AI projects. It balances clinical risk, scientific rigor, and engineering maintainability to deliver reproducible, interpretable, and scalable results.
+本 skill 确立医学影像 AI 项目的通用工程与研究规范，旨在临床风险、科研严谨性与工程可维护性之间取得平衡，输出可复现、可解释、可交付的结果。
 
-## 适用边界
+---
 
-优先在以下场景使用本 skill：
+## 1. Applicability Boundaries / 适用边界
 
-1. 从零搭建医学影像 AI 项目。
-2. 升级现有 `PyTorch`、`MONAI`、`nnU-Net`、`PyTorch Lightning` 或 `SimpleITK` 相关项目。
-3. 设计或审查数据切分、训练逻辑、评估流程、推理流程、部署前检查。
-4. 处理涉及实验设计、数据泄漏、患者级切分、日志规范、测试集边界、统计检验的医学影像 AI 问题。
+**Use this skill when / 优先在以下场景使用:**
+1. Building medical AI projects from scratch. (从零搭建医学影像 AI 项目)
+2. Upgrading existing `PyTorch`, `MONAI`, `nnU-Net`, or `PyTorch Lightning` repositories. (升级现有项目)
+3. Designing or reviewing data splits, training logic, evaluation pipelines, and deployment checks. (设计或审查数据切分、训练、评估与部署流程)
+4. Addressing issues related to data leakage, patient-level splitting, logging standards, test set boundaries, or statistical testing. (处理数据泄漏、患者级切分、日志规范、测试集边界等问题)
 
-以下场景可简化使用，不必展开完整路由：
+**Simplify usage when / 以下场景可简化使用:**
+1. Pure terminology explanation without engineering decisions. (纯术语解释)
+2. Minor syntax fixes unrelated to data splits, training logic, or test set usage. (极小型语法修补)
 
-1. 纯术语解释，不涉及工程决策。
-2. 极小型语法修补，不涉及数据切分、训练逻辑、评估指标、测试集使用或部署边界。
-3. 与医学影像 AI 无关的通用编程问题。
+---
 
-## 默认立场
+## 2. Default Stance / 默认立场
 
-- 先保证数据正确，再谈模型复杂度
-- 先保证可复现和无泄漏，再追求单次指标提升
-- 先使用稳健基线，再引入复杂结构
-- 先给出可验证结论，再给出性能宣传
-- 先明确测试集边界，再讨论最终性能
+- **Data Correctness > Model Complexity:** 先保证数据正确，再谈模型复杂度。
+- **Reproducibility > Single Metric Boost:** 先保证可复现和无泄漏，再追求单次指标提升。
+- **Robust Baselines > Complex Structures:** 先使用稳健基线，再引入复杂结构 (大道至简 / Greatest Simplicity).
+- **Verifiable Conclusions > Hype:** 先给出可验证结论，再给出性能宣传。
+- **Strict Test Set Boundaries > Final Performance:** 先明确测试集边界，再讨论最终性能。
 
-## 任务模式
+---
 
-先判断当前请求属于哪一种模式，再决定回答深度与实施方式。
+## 3. Task Modes / 任务模式
 
-### 模式 A：从零搭建
+### Mode A: Greenfield (从零搭建)
+User provides data/goals, but no mature code.
+- **Workflow:** Define task/metrics -> Setup structure -> Design splits/preprocessing -> Select baseline/loss -> Implement monitoring/evaluation.
 
-适用于用户提供数据、任务目标和约束，但没有成熟训练代码。
+### Mode B: Brownfield Upgrade (升级现有项目)
+Existing repo with messy structure, poor logging, or leakage.
+- **Workflow:** Review existing structure (no full rewrite by default) -> Fix high-risk issues (leakage, missing logs, bad splits) -> Minimal necessary changes preserving business logic.
 
-默认流程：
+### Mode C: Targeted Support (局部专项支持)
+Specific sub-problems (e.g., Loss selection, TensorBoard setup, Post-processing).
+- **Workflow:** Address only the specific sub-problem without forcing a full refactor.
 
-1. 明确任务类型、输入输出、主指标与交付目标。
-2. 建立项目目录、配置规则、实验命名与实验归档方式。
-3. 设计数据切分、预处理、增强和数据验证流程。
-4. 选择基线模型、损失函数和训练策略。
-5. 接入监控、评估、推理与部署前检查。
+---
 
-### 模式 B：升级现有项目
+## 4. Decision Hierarchy / 任务决策顺序
 
-适用于已有仓库，但存在结构混乱、日志不足、切分不严谨、指标不完整或结果不可复现等问题。
+1. **Task Type:** Segmentation / Classification / Detection / Registration / Multimodal
+2. **Data Dimensionality:** 2D / 2.5D / 3D; Isotropic vs. Anisotropic
+3. **Data Scale & Quality:** Full / Weak / Semi / Self-supervised
+4. **Class Imbalance:** Foreground ratio, empty labels, small lesions
+5. **Baseline & Loss:** Select robust baseline and appropriate loss function
+6. **Pipeline:** Design augmentations, monitoring, thresholds, and post-processing
+7. **Advanced Techniques:** Only consider Transformers, Diffusion, Flow Matching, etc., after baselines are solid.
 
-默认原则：
+---
 
-1. 先审阅现有结构，不默认全量重写。
-2. 优先修复高风险问题：数据泄漏、测试集误用、配置散落、日志缺失、评估不完整。
-3. 在尽量保留原有业务语义的前提下做最小必要改动。
+## 5. Reference Document Routing / 参考文档路由
 
-### 模式 C：局部专项支持
+Read the following reference documents when addressing specific domains:
+涉及以下领域时，必须先读取对应的参考文档：
 
-适用于用户只要求解决某个子问题，例如：
-
-- 架构与损失函数选择
-- TensorBoard 日志与训练监控
-- 推理、后处理与部署前规范
-- 统计分析与结果报告规范
-- 单个模块的规范化重写
-
-此时只展开当前子问题，不自动升级为完整重构任务。
-
-## 任务决策顺序
-
-处理任何医学影像 AI 请求时，按此顺序判断：
-
-1. 任务类型：分割 / 分类 / 检测 / 回归 / 生成 / 去噪 / 配准 / 多模态 / 多任务
-2. 数据维度：2D / 2.5D / 3D；各向同性或各向异性
-3. 数据规模与标签质量：全监督 / 弱监督 / 半监督 / 自监督 / 无标签
-4. 类别不平衡程度：前景比例、空标签比例、小病灶占比
-5. 选择基线模型与损失函数
-6. 设计增强、监控、阈值与后处理
-7. 最后再考虑复杂技巧，例如 Transformer、TTA、不确定性估计、扩散模型、flow matching、知识蒸馏、预训练微调
-
-## 参考文档路由
-
-涉及下列专项问题时，应先读取对应文档，再进行实现或建议：
-
-| 问题类型 | 文档 |
+| Domain (领域) | Document (文档) |
 |---|---|
-| 模型架构选择、损失函数设计、类别不平衡、深监督、多任务、生成 / 去噪模型 | `references/architecture_and_loss.md` |
-| 训练日志、验证指标、图像可视化、梯度监控、TensorBoard 组织规范 | `references/tensorboard_logging.md` |
-| 测试集流程、阈值优化、后处理、统计分析、校准、部署、输入校验 | `references/inference_and_deployment.md` |
+| Architecture, Loss Functions, Imbalance (架构与损失) | `references/architecture_and_loss.md` |
+| Training Logs, Metrics, TensorBoard (日志与监控) | `references/tensorboard_logging.md` |
+| Evaluation, Post-processing, Deployment (评估与部署) | `references/inference_and_deployment.md` |
 
-若请求横跨多个文档，按任务主体决定读取顺序。仅当修改是局部实现细节，且不影响实验设计、数据切分、评估逻辑与测试集边界时，才可跳过完整路由。
+---
 
-## 工作原则
+## 6. Working Principles / 工作原则
 
-### 配置优先
+- **Config-Driven (配置优先):** Experimental behavior must be driven by configuration files. (实验行为由配置文件驱动)
+- **Zero Leakage (数据无泄漏):** Strict patient-level or subject-level splitting. No slice-level random splits. (必须按患者级切分，严禁切片级随机切分)
+- **Evaluation Boundaries (评估有边界):** Validation set for tuning/thresholds; Test set strictly for final reporting. (验证集调参，测试集仅用于最终报告)
+- **Auditable Results (结果可审计):** Save config snapshots, metrics, weights, and split info for every run. (每次实验保留配置快照、指标和切分信息)
+- **Clinical Validity (临床语义有效):** Augmentations and post-processing must make anatomical sense. (增强和后处理必须符合解剖学常识)
+- **Framework Agnostic (框架兼容):** Compatible with MONAI/nnU-Net/Lightning, but principles are transferable. (优先兼容主流框架，但核心原则保持可迁移)
 
-实验行为由配置文件驱动。修改参数时优先新增配置，不直接改写核心逻辑。
+---
 
-### 数据无泄漏
-
-必须按患者、病例或其他独立主体切分。禁止切片级随机切分，除非任务另有明确定义。
-
-### 评估有边界
-
-验证集用于模型选择与阈值选择。测试集用于最终报告，不参与调参。任何偏离都必须说明。
-
-### 结果可审计
-
-每次实验至少保留配置快照、核心指标、权重、切分信息、环境摘要、日志入口和必要说明。
-
-### 临床语义有效
-
-增强策略、后处理、阈值和输入校验必须符合影像模态与任务语义，不能只因常见而套用。
-
-### 框架兼容而非框架绑定
-
-默认优先兼容 `MONAI`、`nnU-Net`、`PyTorch Lightning`、纯 `PyTorch` 和 `SimpleITK` 生态，但核心原则应保持可迁移，而不是依赖唯一框架习惯。
-
-## 推荐项目结构
+## 7. Recommended Project Structure / 推荐项目结构
 
 ```text
 project/
-├── configs/
+├── configs/             # YAML/JSON configs
 ├── data/
 │   ├── raw/
 │   ├── processed/
-│   └── splits/          # 切分文件与代码分离，可追溯
+│   └── splits/          # Split files isolated from code
 ├── src/
 │   ├── models/
 │   ├── data/
@@ -138,168 +107,48 @@ project/
 │   ├── train.py
 │   ├── evaluate.py
 │   └── export_model.py
-├── experiments/         # 归档实验产物，不混入源代码
-├── notebooks/
+├── experiments/         # Archived experiment artifacts
 └── README.md
 ```
 
-结构要求：
+---
 
-1. 训练逻辑不要长期留在 notebook 中。
-2. `experiments/` 与源代码分离。
-3. 切分文件独立保存，并作为实验资产归档。
-4. 对旧仓库改造时，可保留原目录，但要补足结构语义与边界。
+## 8. Minimal Examples / 最小示例
 
-## 最小示例
+### Experiment Naming (实验命名)
+Format: `{task}_{dataset}_{model}_{variant}_{YYYYMMDD}`
+Example: `seg_brats2024_swinunetr_baseline_20250601`
+*Prohibited: `test2`, `new_v3`, `final`*
 
-### 实验命名
-
-格式：`{task}_{dataset}_{model}_{variant}_{YYYYMMDD}`。所有可变项显式编码，避免靠注释补充。
-
-```text
-seg_brats2024_swinunetr_baseline_20250601
-seg_brats2024_swinunetr_deep_sup_dicefocal_20250608
-cls_rsna_efficientnetv2_5fold_cv_20250601
-gen_lidc_ldm_conditioned_t2_20250615
-```
-
-禁止出现 `test2`、`new_v3`、`final_final` 等无语义命名。
-
-### 患者级切分文件
-
-`splits/split_official.json`
-
-切分文件与代码完全分离，作为实验产物独立归档，不随代码修改而变化。
-
+### Patient-Level Split File (患者级切分文件)
+Stored in `splits/split_official.json`, archived with experiments.
 ```json
 {
   "schema_version": "1.0",
-  "created": "2025-06-01",
-  "seed": 42,
   "strategy": "stratified_k_fold",
-  "stratify_by": ["label_presence", "scanner_manufacturer"],
   "unit": "subject",
-  "note": "subject-level split; no slice or volume leakage across folds",
   "folds": {
     "fold_0": {
-      "train": ["sub-001", "sub-003", "sub-007"],
-      "val":   ["sub-002", "sub-010"],
-      "test":  ["sub-005", "sub-012"]
+      "train": ["sub-001", "sub-003"],
+      "val": ["sub-002"],
+      "test": ["sub-005"]
     }
   },
-  "held_out_test": ["sub-099", "sub-100"]
+  "held_out_test": ["sub-099"]
 }
 ```
 
-`held_out_test` 在所有调参结束后仅使用一次，不参与任何 fold。
+### TensorBoard Namespace (TensorBoard 命名空间)
+Format: `{split}/{category}/{metric}`
+Example: `train/loss/seg`, `val/seg/dice_mean`, `test/calibration/ece`
 
-### TensorBoard 命名空间
+---
 
-按 `{split}/{category}/{metric_or_content}` 三层组织，同类指标对齐前缀便于分组对比。
+## 9. Delivery Standards / 交付标准
 
-```text
-# 损失与学习动态
-train/loss/total          train/loss/seg           train/loss/aux
-train/optim/lr            train/optim/grad_norm_total
-
-# 验证指标
-val/seg/dice_mean         val/seg/dice_per_class   val/seg/hd95
-val/cls/auroc             val/cls/f1               val/calibration/ece
-
-# 诊断图像
-val/vis/input_overlay     val/vis/pred_overlay     val/vis/error_map
-
-# 最终测试集
-test/seg/dice_mean        test/seg/hd95            test/cls/auroc
-test/calibration/ece      test/calibration/curve
-```
-
-## 关键实施要求
-
-### 数据管线
-
-必须覆盖：
-
-- 数据字段定义与元数据约定
-- 训练 / 验证 / 测试切分策略，优先患者级，并记录 seed 与日期
-- 预处理顺序与原因说明
-- 增强策略与禁用增强说明
-- 首次训练前的数据抽样验证，包括前向通过与 loss 合理性检查
-
-### 模型与损失
-
-必须说明：
-
-- 为什么选择该基线模型
-- 为什么该损失函数适合当前不平衡模式
-- 是否存在空标签、小病灶、边界精度或类别极度稀疏等特殊问题
-- 生成或去噪任务中，扩散、flow matching、VAE-GAN 或其他方案的选型依据
-
-### 训练与监控
-
-必须覆盖：
-
-- 主要早停指标与核心训练指标
-- TensorBoard 命名空间或等价监控结构
-- 图像可视化、混淆矩阵、PR 曲线、校准曲线等诊断信号
-- 学习率、梯度、显存和吞吐的基础监控
-
-### 评估与推理
-
-必须确认：
-
-- 阈值 / 后处理来源于验证集，不来源于测试集
-- 测试集仅在最终阶段使用一次
-- 是否需要交叉验证、置信区间、统计显著性检验
-- 生成任务是否需要结构保真、病灶保留、下游任务可用性或分布一致性检查
-
-## 交付标准
-
-当本 skill 参与代码生成、改造或方案设计时，输出应尽量满足以下标准：
-
-1. 能明确指出当前请求属于哪种模式。
-2. 能说明关键设计依据，而不是只给结论。
-3. 能将改动限制在必要范围内，不无故推翻整个仓库。
-4. 能给出最小可验证路径，例如一次前向、一次短训练、一次验证循环或一次推理校验。
-5. 能指出潜在风险，尤其是数据泄漏、指标误读、临床无效增强、测试集误用、日志不足和生成结果临床失真。
-
-## 最小检查清单
-
-### 首次训练前
-
-- [ ] 任务类型、输入输出、主指标已定义
-- [ ] 数据切分规则已确认，无主体泄漏
-- [ ] 预处理与增强顺序已检查
-- [ ] 模型与损失选择有明确理由
-- [ ] 完成一次前向 + loss 计算 + 验证循环
-- [ ] 日志目录、实验命名、配置快照已生效
-
-### 宣布结果前
-
-- [ ] 主指标、辅助指标、失败样例均已检查
-- [ ] 推理阈值与后处理来源明确
-- [ ] 测试集使用边界明确
-- [ ] 结果可由配置与代码重新运行复现
-
-### 准备论文或交付前
-
-- [ ] 关键实验均保留配置快照和指标记录
-- [ ] 数据切分与环境信息可追溯
-- [ ] 置信区间或统计检验已按需补齐
-- [ ] 不存在明显隐私风险或不可解释的数据处理
-
-## 禁止事项
-
-1. 在未检查数据切分前直接开始训练
-2. 使用测试集做阈值选择、模型选择或频繁试验
-3. 将患者标识、病历号或其他敏感信息写入日志
-4. 为追求速度而删除配置、日志、校验或实验归档
-5. 因为“看起来更先进”而跳过稳健基线
-6. 对已有仓库进行无授权的大规模重写
-
-## 输出风格
-
-1. 先给稳定可落地的默认方案，再给可选优化方向
-2. 对“为什么这样做”给出简洁说明
-3. 对不确定场景明确写出假设条件
-4. 优先给可执行的结构化建议，不堆砌术语
+When generating code or designs:
+1. Explicitly state the Task Mode (A, B, or C).
+2. Provide rationale for design choices, not just conclusions.
+3. Limit changes to the necessary scope; do not rewrite blindly.
+4. Provide a minimal verifiable path (e.g., one forward pass, one short validation loop).
+5. Highlight potential clinical or engineering risks.
